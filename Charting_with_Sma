@@ -1,0 +1,33 @@
+from __future__ import print_function
+
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Apr 24 20:40:24 2020
+
+@author: omar
+"""
+import matplotlib.pyplot as plt
+import datetime
+import pandas as pd
+import pandas_datareader as web
+import mplfinance as mpf
+
+
+if __name__ == '__main__':
+    end_date = datetime.datetime.now()
+    
+    start_date = end_date - datetime.timedelta(days = 1828)
+    
+    DNB_Stock = web.DataReader("DNB.OL", "yahoo",start_date, end_date)
+    
+    Sma_200 = DNB_Stock["Adj Close"].rolling(200).mean()
+    Sma_50 = DNB_Stock["Adj Close"].rolling(50).mean()
+    Sma_20 = DNB_Stock["Adj Close"].rolling(20).mean()
+    
+    apd = [mpf.make_addplot(Sma_200),
+           mpf.make_addplot(Sma_50),
+           mpf.make_addplot(Sma_20)]
+    
+    mpf.plot(DNB_Stock,volume=True,type='candle',style='charles',addplot = apd,savefig='DNB.png')
+    
+    #We can be more flexiable with this. This is project nr.1
